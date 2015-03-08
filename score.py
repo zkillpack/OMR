@@ -159,9 +159,9 @@ class Staves:
 
 class Staff:
 
-    """ A group of five StaffLines that belongs to a Staves"""
+    """A group of five StaffLines that belongs to a Staves"""
 
-    def __init__(self, ZHEEYAT):
+    def __init__(self, PUT_THINGS_HERE):
         self.index = 0
         self.top = 0
         self.bottom = 0
@@ -178,7 +178,7 @@ class StaffLine:
     which, while robust rotation detection helps (and I've got that!), it's 
     really not something you can assume...I'll figure it out when I do stable paths!"""
 
-    def __init__(self, ZHEEYAT):
+    def __init__(self, PUT_THINGS_HERE):
         self.index = 0
         self.top = 0
         self.bottom = 0
