@@ -14,7 +14,7 @@ class Segmenter:
 
 class Segment:
     """ put stuff here at some point """
-    def __init__(self, ZHEEYAT):
+    def __init__(self, put_stuff_here_eventually):
         pass
 
 class SIFTSegmenter(Segmenter):
