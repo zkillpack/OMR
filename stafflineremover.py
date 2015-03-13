@@ -5,8 +5,11 @@ from matplotlib import pyplot as plt
 import abc
 import score
 
-
 class StaffLineRemover(object):
+    """Once additional algorithms are in place, this will be complemented by a
+    StaffLinePreprocessor which will populate the Staves object with information
+    without removing staff lines. The information will then be fed to other algorithms
+    """
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
@@ -36,6 +39,7 @@ class ScanLineRemover(StaffLineRemover):
             binarized_candidates = (H_prime == 0)
         except:
             # What exactly should we do if there's nothing there?
+            # The RotationFinder shouldn't really even give us such an image
             print "No staff lines detected!"
             return None
 
@@ -76,14 +80,13 @@ class ScanLineRemover(StaffLineRemover):
         print "\n%d staff lines detected" % num_staff_lines
         print "%d staves detected\n" % self.ImageScore.staves.number_of_staves
 
-
         print "Average interstaff distance: %.1f" % self.ImageScore.staves.average_inter_staff_distance
         print "Average interline distance:  %.1f" % self.ImageScore.staves.average_inter_line_distance
         print "Average line thickness:      %.1f" % self.ImageScore.staves.average_staff_line_thickness
 
         """And now, we delete the staff lines! 
 
-        ~horribly inefficient and altogether mediocre placeholder algorithm~
+        ~HORRIBLY inefficient and altogether mediocre placeholder algorithm~
         ~soon this will be replaced by the stable paths algorithm~
 
         For a given pixel, if its y coordinate is the top or bottom of a line,
@@ -95,6 +98,10 @@ class ScanLineRemover(StaffLineRemover):
         If it's in a center row, delete if clear."""
 
         line_threshold = 5
+
+        
+
+
 
         for row_to_remove in self.ImageScore.staves.line_starts:
             for col in range(self.ImageScore.img_width):
@@ -118,3 +125,4 @@ class ScanLineRemover(StaffLineRemover):
 
         cv2.imshow("Staff lines removed", self.staff_lines_removed)
         return self.staff_lines_removed
+

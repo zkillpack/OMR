@@ -14,7 +14,7 @@ class Score:
     def __init__(self, image):
 
         self.image = ImageScore(image)
-        self.music = MusicScore()
+        
 
 
 class ImageScore:
@@ -39,9 +39,9 @@ class ImageScore:
         self.img_height, self.img_width = self.image.shape
         self.image = EntropyRotationFinder(self).rotate()
         self.image = self.binarize(self.image)
+       
         self.image_inv = self.binarize(self.image, inverted=True)
 
-        self.music = MusicScore()
 
         self.horizontal_projection = self.get_horizontal_projection(self.image)
         self.vertical_projection = self.get_vertical_projection(self.image)
@@ -159,9 +159,12 @@ class Staves:
 
 class Staff:
 
-    """A group of five StaffLines that belongs to a Staves"""
+    """
+    A group of five StaffLines that belongs to a Staves
+    """
 
     def __init__(self, PUT_THINGS_HERE):
+        raise NotImplementedError
         self.index = 0
         self.top = 0
         self.bottom = 0
@@ -179,6 +182,7 @@ class StaffLine:
     really not something you can assume...I'll figure it out when I do stable paths!"""
 
     def __init__(self, PUT_THINGS_HERE):
+        raise NotImplementedError
         self.index = 0
         self.top = 0
         self.bottom = 0
@@ -188,4 +192,5 @@ class StaffLine:
 class MusicScore:
 
     """Will hold MIDI or MusicXML (or MEI?)...eventually..."""
-    pass
+    def __init__(self, PUT_THINGS_HERE):
+        raise NotImplementedError

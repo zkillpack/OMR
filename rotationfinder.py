@@ -109,7 +109,7 @@ class EntropyRotationFinder(RotationFinder):
             sum(horizontal_projection)
 
         # Calculate entropy
-        print horizontal_projection_normalized
+        
         log_projection = np.log2(horizontal_projection_normalized)
         log_projection[np.where(log_projection < -10 ** 6)] = 0
         log_projection = -log_projection
