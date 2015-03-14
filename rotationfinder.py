@@ -26,7 +26,7 @@ class HoughRotationFinder(RotationFinder):
         self.image = self.ImageScore.get_image()
         self.img_height, self.img_width = self.ImageScore.img_height, self.ImageScore.img_width
         self.lines = None
-        get_hough_lines(self)
+        self.get_hough_lines(self)
 
     def get_hough_lines(self):
         """
@@ -39,9 +39,10 @@ class HoughRotationFinder(RotationFinder):
 
          Very slow. Does not work for large rotations. Used as a last resort.
         """
+
         hough_threshold = 1.5
         self.lines = cv2.HoughLines(
-            img, 1, np.pi / 720, int(self.img_width / hough_threshold))
+            self.image, 1, np.pi / 720, int(self.img_width / hough_threshold))
         # THESE LIMITS SHOULD DEPEND ON IMAGE SIZE
         print "Performing Hough iteration:"
         hough_counter = 1
@@ -51,7 +52,7 @@ class HoughRotationFinder(RotationFinder):
             hough_counter += 1
             hough_threshold += .1
             self.lines = cv2.HoughLines(
-                img, 1, np.pi / 720, int(self.img_width / hough_threshold))
+                self.image, 1, np.pi / 720, int(self.img_width / hough_threshold))
 
     def warp_by_hough_lines(self):
         """ Given the lines detected in an image, return a rotated copy so that
@@ -70,19 +71,19 @@ class HoughRotationFinder(RotationFinder):
         """Given an image and an array lines (resulting from a call to cv2.HoughLines),
         add the lines to the image for visualization purposes.
         """
-        color_image = self.ImageScore.getO
+        color_image = self.ImageScore.get_image()
         for rho, theta in self.lines[0]:
             a = np.cos(theta)
             b = np.sin(theta)
             x0 = a * rho
             y0 = b * rho
-            x1 = int(x0 + img_width * (-b))
-            y1 = int(y0 + img_width * (a))
-            x2 = int(x0 - img_width * (-b))
-            y2 = int(y0 - img_width * (a))
+            x1 = int(x0 + self.img_width * (-b))
+            y1 = int(y0 + self.img_width * (a))
+            x2 = int(x0 - self.img_width * (-b))
+            y2 = int(y0 - self.img_width * (a))
             cv2.line(self.image, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
-        cv2.imShow("Hough transform lines", self.image)
+        cv2.imShow("Hough transform lines", color_image)
 
     def rotate(self):
         return warp_by_hough_lines(get_hough_lines(self.image), self.image)
@@ -109,7 +110,7 @@ class EntropyRotationFinder(RotationFinder):
             sum(horizontal_projection)
 
         # Calculate entropy
-        
+
         log_projection = np.log2(horizontal_projection_normalized)
         log_projection[np.where(log_projection < -10 ** 6)] = 0
         log_projection = -log_projection
@@ -119,7 +120,7 @@ class EntropyRotationFinder(RotationFinder):
         return entropy
 
     def get_rotation_angle(self):
-        """Takes an image and finds the angle theta that 
+        """Takes an image and finds the angle theta that
         minimizes entropy i.e. the rotation angle that makes
         the most distinct peaks in the horizontal projection
         """

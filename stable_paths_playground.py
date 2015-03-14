@@ -1,7 +1,7 @@
 import numpy as np
 import itertools
 import pickle
-
+from profilehooks import profile
 
 # These are a result of the preprocessing from StaffLineRemover
 # and are specific to the example image
@@ -17,7 +17,7 @@ image = image[75:205, 35:2445]
 img_height, img_width = image.shape
 
 
-def weight(p1, p2, vertical_map, black_pixels):
+def weight(p1, p2, vertical_map, black_pixels, vertical_threshold = 4):
     """
     Calculate weight for an edge between pixel 1 and pixel 2
     in our image, given the following rules:
@@ -44,7 +44,7 @@ def weight(p1, p2, vertical_map, black_pixels):
     if p2 not in black_pixels:
         weight += 1
 
-    vertical_threshold = 4
+    
 
     if vertical_map[p1] >= vertical_threshold:
         weight += 2
@@ -80,7 +80,7 @@ def find_black_pixels(image):
     black_y, black_x = (image == 0).nonzero()
     return {(y, x) for (y, x) in zip(black_y, black_x)}
 
-
+@profile
 def build_graph(image):
     """
     Represent graph as adjacency list: map each pixel
@@ -111,5 +111,19 @@ def build_graph(image):
             in itertools.product(range(img_height), range(img_width))
             }
 
-graph = build_graph(image)
-pickle.dump(graph, open("graph.pkl", "wb"))
+#graph = build_graph(image)
+#pickle.dump(graph, open("graph.pkl", "wb"))
+g = pickle.load(open("graph.pkl", "rb"))
+
+@profile
+def dfs(graph, start, visited=None):
+    print start
+    if visited is None:
+        visited = set()
+    visited.add(start)
+    for next in graph[start] - visited:
+        dfs(graph, next, visited)
+    return visited
+
+
+print dfs(g, (20,20))

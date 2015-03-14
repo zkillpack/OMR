@@ -12,9 +12,7 @@ class Score:
     """
 
     def __init__(self, image):
-
         self.image = ImageScore(image)
-        
 
 
 class ImageScore:
@@ -39,9 +37,8 @@ class ImageScore:
         self.img_height, self.img_width = self.image.shape
         self.image = EntropyRotationFinder(self).rotate()
         self.image = self.binarize(self.image)
-       
-        self.image_inv = self.binarize(self.image, inverted=True)
 
+        self.image_inv = self.binarize(self.image, inverted=True)
 
         self.horizontal_projection = self.get_horizontal_projection(self.image)
         self.vertical_projection = self.get_vertical_projection(self.image)
@@ -52,7 +49,8 @@ class ImageScore:
         self.staff_lines_removed = ScanLineRemover(self).remove_staff_lines()
 
         self.vertical_segments = VerticalSegmenter(self).get_segments()
-        self.removed_vertical_segments = cv2.bitwise_not(cv2.bitwise_xor(self.staff_lines_removed, self.vertical_segments))
+        self.removed_vertical_segments = cv2.bitwise_not(
+            cv2.bitwise_xor(self.staff_lines_removed, self.vertical_segments))
         # Demo the removed objects cause why not
         cv2.imshow("removed verticals", self.removed_vertical_segments)
 
@@ -100,7 +98,6 @@ class ImageScore:
                 histogram_image[i][j] = 0
         if show:
             cv2.imshow("horizontal histogram", histogram_image)
-       
         return histogram_image
 
     @staticmethod
@@ -112,7 +109,7 @@ class ImageScore:
         histogram = np.sum(img, axis=1) / 255
         # Convert count to black pixels
         histogram = np.max(histogram) - histogram
-        
+
         return histogram
 
     @staticmethod
@@ -174,12 +171,13 @@ class Staff:
 
 class StaffLine:
 
-    """Not sure how to implement...depends on what I discover while 
+    """Not sure how to implement...depends on what I discover while
     doing future staff line removal algorithms.
-    Just storing top/bottom/width only works for a scanline approach 
+    Just storing top/bottom/width only works for a scanline approach
     where you assume it's of uniform thickness,
-    which, while robust rotation detection helps (and I've got that!), it's 
-    really not something you can assume...I'll figure it out when I do stable paths!"""
+    which, while robust rotation detection helps (and I've got that!), it's
+    really not something you can assume...I'll figure it out when I do stable paths!
+    """
 
     def __init__(self, PUT_THINGS_HERE):
         raise NotImplementedError
@@ -192,5 +190,6 @@ class StaffLine:
 class MusicScore:
 
     """Will hold MIDI or MusicXML (or MEI?)...eventually..."""
+
     def __init__(self, PUT_THINGS_HERE):
         raise NotImplementedError
